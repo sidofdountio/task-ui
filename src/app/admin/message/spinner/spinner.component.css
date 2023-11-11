@@ -1,0 +1,9 @@
+.grid-container{
+    margin-left: 20px;
+}
+
+.spinner{
+    top: 10rem;
+    left: 30rem;
+    position: absolute;
+}

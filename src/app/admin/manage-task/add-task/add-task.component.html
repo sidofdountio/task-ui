@@ -1,0 +1,73 @@
+<h1 mat-dialog-title> Add New Task</h1>
+<div mat-dialog-content [formGroup]="taskForm">
+
+
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+            <mat-hint>Enter task title</mat-hint>
+            <mat-error>Enter task title</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label> Description </mat-label>
+            <input matInput formControlName="description">
+            <mat-hint>Enter task description</mat-hint>
+            <mat-error>Enter task description</mat-error>
+        </mat-form-field>
+    </p>
+
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Task status</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="INPROGRESS">INPROGRESS</mat-option>
+                <mat-option value="PENDING">PENDING</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Task Prority</mat-label>
+            <mat-select formControlName="priority">
+                <mat-option value="HIGH">HIGH</mat-option>
+                <mat-option value="MEDIUM">MEDIUM</mat-option>
+                <mat-option value="LOW">LOW</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </p>
+
+   
+    <div class="row">
+        <div class="col">
+            <mat-form-field appearance="outline">
+                <mat-label>Due Date</mat-label>
+                <input matInput formControlName="dueDate" [matDatepicker]="releasedAtPicker"
+                    (click)="releasedAtPicker.open()">
+                <mat-datepicker #releasedAtPicker >
+                </mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="releasedAtPicker">
+                </mat-datepicker-toggle>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <div formGroupName="userForm" class="select">
+                <mat-form-field appearance="outline">
+                    <mat-label> Assigne To </mat-label>
+                    <mat-select formControlName="id">
+                        <mat-option  *ngFor="let userToAsigne of users" [value]="userToAsigne.id">
+                            {{ userToAsigne.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+    </div>
+      
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="onClose()">Cancel</button>
+    <button mat-raised-button [disabled]="!taskForm.valid" cdkFocusInitial color="primary"
+        (click)="onSaveTask()">Save</button>
+</div>

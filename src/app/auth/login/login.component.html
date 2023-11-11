@@ -1,0 +1,37 @@
+<div class="container mt-5">
+  <div class="row">
+      <div class="col-sm-12">
+
+          <div class="form">
+              <div class="mb-3 text-center">
+                  <h2 class="text-primary">Login to <span class="text-uppercase">Lyfecompany</span></h2>
+                  <p>{{ message }}</p>
+              </div>
+              <form [formGroup]="form" class="mb-2">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Email</mat-label>
+                      <input matInput formControlName="email">
+                      <mat-error>Please enter email</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                      <mat-label>Password</mat-label>
+                      <input matInput formControlName="password">
+                      <mat-error>Please provide a password</mat-error>
+                  </mat-form-field>
+                  <button type="button" mat-raised-button color="primary" [disabled]="!form.valid"
+                      (click)="onLogIn()">Log
+                      in</button>
+              </form>
+              <span class="text-center">Or</span>
+              <div>
+                  <a  routerLink="/register" routerLinkActive="active" class="text-center" >Register here</a>
+                  <hr>
+                  <p class="text-center">&COPY; All right Lyfecompany</p>
+              </div>
+          </div>
+      </div>
+      <div class="mb-3">
+          <!-- <button type="button" mat-raised-button color="warn" (click)="onLogout()">Logout</button> -->
+      </div>
+  </div>
+</div>

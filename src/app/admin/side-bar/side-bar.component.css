@@ -1,0 +1,42 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.sidenav-container {
+  height: 100%;
+  background: whitesmoke;
+  box-shadow: 0px 0px 10px #333;
+}
+
+.logout {
+  margin-left: 8px;
+}
+
+mat-toolbar {
+  background-color: white;
+  border: 1px solid #eee;
+  box-shadow: 0px 0px 10px #333;
+  /* rgba(140, 140, 140, 0.2) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 4px 4px 0px */
+}
+
+.toolbar .shop{
+  margin-left: 15px;
+}

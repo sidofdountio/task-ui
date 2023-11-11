@@ -1,0 +1,11 @@
+.grid-container {
+    margin: 20px;
+}
+table{
+    width: 100%;
+}
+
+mat-form-field{
+    width: 300px;
+    padding: 4px;
+}

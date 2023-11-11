@@ -1,0 +1,60 @@
+<h1 mat-dialog-title> Edite Task</h1>
+<div mat-dialog-content [formGroup]="FormTask">
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+            <mat-hint>Enter new task title</mat-hint>
+            <mat-error>Enter new task title</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label> Description </mat-label>
+            <input matInput formControlName="description">
+            <mat-hint>Enter new task description</mat-hint>
+            <mat-error>Enter new task description</mat-error>
+        </mat-form-field>
+    </p>
+
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Task status</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="INPROGRESS">INPROGRESS</mat-option>
+                <mat-option value="PENDING">PENDING</mat-option>
+                <mat-option value="COMPLETED">COMPLETED</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Task Prority</mat-label>
+            <mat-select formControlName="priority">
+                <mat-option value="HIGH">HIGH</mat-option>
+                <mat-option value="MEDIUM">MEDIUM</mat-option>
+                <mat-option value="LOW">LOW</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </p>
+
+    <p>
+       
+        
+    </p>
+
+    <div formGroupName="userForm" class="select">
+        <mat-form-field appearance="outline">
+            <mat-label>Assigne To</mat-label>
+            <mat-select formControlName="id">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{user.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="onClose()">Cancel</button>
+    <button mat-raised-button [disabled]="!FormTask.valid" cdkFocusInitial color="primary"
+        (click)="onSaveTask()">Save</button>
+</div>
