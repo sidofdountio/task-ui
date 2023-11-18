@@ -8,8 +8,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 
    const authenticate = authService.isAuthenticated();
+   
     if (authenticate) {
-     
       return true;
     }
     else {

@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { AuthenticationRequest } from 'src/app/model/authentication-request';
 import { Router } from '@angular/router';
 import { SnackBarService } from 'src/app/service/snack-bar-service.service';
+import { RegisteRequester } from 'src/app/model/register-request';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { SnackBarService } from 'src/app/service/snack-bar-service.service';
 })
 export class RegisterComponent {
   registerForm = this.fb.group({
+    username: ['' , [Validators.required]],
     email: this.fb.nonNullable.control("", {
       validators: [Validators.required, Validators.email],
     }),
@@ -23,7 +25,7 @@ export class RegisterComponent {
     ,private snacbarService:SnackBarService) { }
 
   onRegister() {
-    this.authService.register$(this.registerForm.value as AuthenticationRequest)
+    this.authService.register$(this.registerForm.value as RegisteRequester)
       .subscribe(
         (response => {
           this.snacbarService.openSnackBar("Account Successfuly Created","X");

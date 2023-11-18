@@ -17,6 +17,7 @@ import { DialogService } from 'src/app/service/dialog-service.service';
 import { AppState } from 'src/app/model/app-state';
 import { CustormResponse } from 'src/app/model/custorm-response';
 import { User } from 'src/app/model/user';
+import { TaskRequest } from 'src/app/model/task-request';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSujet$ = new BehaviorSubject<Task[]>([]);
   tasks: Task[] = [];
   ELEMENT_DATA: Task[] = [];
-  task: Task = {
+  task: TaskRequest = {
     title: '',
     status: TaskStatus.PENDING,
     description: '',
@@ -49,8 +50,12 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
   DataState = DataState;
   taskStatus = TaskStatus;
   priority = Priority;
+  title: any;
+  status: any;
+  description: any;
+  dueDate: any;
+
   constructor(private appService: AppService, private snackbar: SnackBarService,
-    public dialog: MatDialog,
     private dialogService: DialogService) { }
 
 
@@ -67,10 +72,10 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
           this.state = DataState.ERROR_STATE
         },
         () => {
-          this.state = DataState.LOADED_STATE
+          this.state = DataState.LOADED_STATE;
+          this.snackbar.openSnackBar("Task Loaded","X");
         }
       )
-
     );
   }
 
@@ -90,24 +95,7 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
     )
   }
 
-  onAddTask() {
-    const configDialog = new MatDialogConfig();
-    configDialog.autoFocus = true;
-    configDialog.disableClose = true;
-    configDialog.data = this.task;
-    const dialogRef = this.dialog.open(AddTaskComponent, configDialog);
-    dialogRef.afterClosed()
-      .subscribe(
-        (response) => {
-          console.log(response);
-          this.addTask(response)
-          this.snackbar.openSnackBar("Task added sussccefuly", "close");
-          this.onGetTasks();
-        },
-        (error: HttpErrorResponse) => {
-          this.snackbar.openSnackBar("An error while added", "close");
-        })
-  }
+  
 
 
   onEditTask(id: number) {
@@ -116,31 +104,9 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
         this.taskById = task;
       }
     }
-    // matDialog confi
-    const configDialog = new MatDialogConfig();
-    configDialog.autoFocus = true;
-    configDialog.disableClose = true;
-    configDialog.data = this.taskById;
-    // passing matDialogue and config to open 
-    const dialogRef = this.dialog.open(EditTaskComponent, configDialog);
-    dialogRef.afterClosed()
-      .subscribe(
-        (taskToUpdate) => {
-          this.onUpdate(taskToUpdate);
-        })
+    
   }
 
-
-  addTask(response: Task) {
-    this.appService.addTask(response).subscribe(
-      () => {
-        this.snackbar.openSnackBar("Task succesfuly Added", "close");
-      },
-      (error: HttpErrorResponse) => {
-        this.snackbar.openSnackBar("An Error Occured", "close");
-      }
-    )
-  }
 
   onUpdate(taskToUpdate: Task) {
     this.appService.editeProduct(taskToUpdate)
@@ -160,12 +126,9 @@ export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.confirmMessage("Do you want to this entry");
   }
 
-
-
-
-
   ngOnDestroy(): void {
 
   }
+
 
 }

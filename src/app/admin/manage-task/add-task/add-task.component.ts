@@ -3,11 +3,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Priority } from 'src/app/model/enume/priority';
 import { TaskStatus } from 'src/app/model/enume/task-status';
 import { Task } from 'src/app/model/task';
+import { TaskRequest } from 'src/app/model/task-request';
 import { User } from 'src/app/model/user';
 import { AppService } from 'src/app/service/app-service.service';
+import { SnackBarService } from 'src/app/service/snack-bar-service.service';
 
 @Component({
   selector: 'app-add-task',
@@ -15,79 +18,51 @@ import { AppService } from 'src/app/service/app-service.service';
   styleUrls: ['./add-task.component.css']
 })
 export class AddTaskComponent implements OnInit {
-  user!:User
-  task: Task = {
-    title: '',
-    status: TaskStatus.PENDING,
-    description: '',
-    priority: Priority.MEDIUM,
-    dueDate: '',
-    user: this.user
-  }
-  startDate: any;
-  users: User[] = [];
+
+  taskForm = this.fb.group({
+    title: this.fb.nonNullable.control("",{
+      validators:[Validators.required]
+    }),
+    description: ['', Validators.required],
+    status: ['', Validators.required],
+    priority: ['', Validators.required],
+    dueDate: ['', Validators.required],
+  });
 
 
-  taskToSave: Task = {
-    title: '',
-    status: TaskStatus.PENDING,
-    description: '',
-    priority: Priority.MEDIUM,
-    dueDate: '',
-    user: this.user
-  }
-  taskForm!: FormGroup;
-
-  
-
-  
-
-
-  constructor(private fb: FormBuilder, private appService:AppService,
-    @Inject(MAT_DIALOG_DATA) public data: Task,
-    public dialogRef: DialogRef<AddTaskComponent>) {
-    this.task = {
-      title: data.title,
-      status: data.status,
-      description: data.description,
-      priority: data.priority,
-      dueDate: data.dueDate,
-      user: data.user
-    }
+  constructor(private fb: FormBuilder, private appService: AppService,
+    private snackbar: SnackBarService,private router:Router) {
   }
 
 
   ngOnInit(): void {
+  }
 
-    
-    this.appService.getUsers().subscribe(
-      (response)=>{
-        this.users = response;
+  onSubmit() {
+    this.addTask(this.taskForm.value as TaskRequest);
+  }
+
+
+
+  addTask(task: Task) {
+    this.appService.addTask(task).subscribe(
+      () => {
+        this.snackbar.openSnackBar("Task succesfuly Added", "close");
+        this.router.navigate(['./admin']);
       },
-      (error:HttpErrorResponse)=>{
-        console.log("Error occured : %s",error.status);
+      (error: HttpErrorResponse) => {
+        this.snackbar.openSnackBar("An Error Occured", "close");
       }
-    );
+    )
+  }
 
-    this.taskForm = this.fb.group({
-      title: [this.task.title, [Validators.required]],
-      description: [this.task.description, [Validators.required]],
-      status: [this.task.status, [Validators.required]],
-      priority: [this.task.priority, [Validators.required]],
-      dueDate: [this.task.dueDate, [Validators.required]],
-      userForm: this.fb.group({
-        id: [this.taskToSave.user,[]]
-      })
-    });
-  }
   onClose() {
-    this.dialogRef.close();
+
   }
+
+
   onSaveTask() {
-    console.log("=============")
-    console.log( this.taskForm.value);
-    console.log("=============")
-    this.dialogRef.close(this.taskForm.value)
+
   }
 
 

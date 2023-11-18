@@ -1,14 +1,20 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12">
-  
+
             <div class="form">
                 <div class="mb-3 text-center">
                     <h2 class="text-uppercase mb-3">Lyfecompany</h2>
                     <h3>CREATE ACCOUNT</h3>
-                    
+
                 </div>
                 <form [formGroup]="registerForm" class="mb-2">
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username">
+                        <mat-error>Please enter valid username</mat-error>
+                    </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Email</mat-label>
                         <input matInput formControlName="email">
@@ -26,11 +32,11 @@
                 <span class="text-center">Or</span>
                 <div>
                     <button mat-flat-button routerLink="/login" routerLinkActive="active">SingIn</button>
-                 
+
                     <hr>
                     <p class="text-center">&COPY; All right Lyfecompany</p>
                 </div>
             </div>
         </div>
     </div>
-  </div>
+</div>

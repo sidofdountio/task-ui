@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay,tap } from 'rxjs/operators';
 import { AppService } from 'src/app/service/app-service.service';
 import { Task } from 'src/app/model/task';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
@@ -11,9 +12,7 @@ import { Task } from 'src/app/model/task';
   styleUrls: ['./side-bar.component.css']
 })
 export class SideBarComponent implements OnInit {
-logout() {
-throw new Error('Method not implemented.');
-}
+
   private breakpointObserver = inject(BreakpointObserver);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -26,7 +25,7 @@ throw new Error('Method not implemented.');
   notifItem:any;
   notification:boolean = false;
 
-  constructor(private appService:AppService){}
+  constructor(private appService:AppService,private router:Router){}
     
   ngOnInit(): void {
     this.appSate$ = this.appService.tasks$.pipe(
@@ -51,5 +50,14 @@ throw new Error('Method not implemented.');
       )
 
     );
+  }
+
+  logout() {
+    this.appService.logout$.subscribe(
+      ()=>{
+        localStorage.clear();
+        this.router.navigate(["/login"])
+      }
+    )
   }
 }

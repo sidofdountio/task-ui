@@ -3,6 +3,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { Validators, FormBuilder } from '@angular/forms';
 import { AuthenticationRequest } from 'src/app/model/authentication-request';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +12,16 @@ import { AuthenticationRequest } from 'src/app/model/authentication-request';
 })
 export class LoginComponent {
   message: string = "";
+  isLoading = new BehaviorSubject<boolean>(false);
+  isLoading$ = this.isLoading.asObservable();
+  
   form = this.fb.group({
     email: this.fb.nonNullable.control("", {
       validators: [Validators.required, Validators.email],
     }),
     password: ['', [Validators.required, Validators.minLength(8)]]
   });
+
   constructor(public authService: AuthService, private router: Router, private fb: FormBuilder) {
 
   }
@@ -30,7 +35,7 @@ export class LoginComponent {
           this.router.navigate(['/admin'])
         }),
         (() => {
-          this.authService.openSnackBarCustorm("username or password not found", "Close")
+          this.authService.openSnackBarCustorm("Email or password not found".toUpperCase(), "X")
         })
       )
   }

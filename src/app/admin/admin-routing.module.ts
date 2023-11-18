@@ -5,6 +5,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { authGuard } from '../auth/auth.guard';
+import { AddTaskComponent } from './manage-task/add-task/add-task.component';
 
 const routes: Routes = [
   {
@@ -16,8 +17,12 @@ const routes: Routes = [
         path: '',
         children: [
           {
-            path: './profile',
+            path: 'profile',
             component: ProfileComponent
+          },
+          {
+            path: 'addTask',
+            component: AddTaskComponent
           },
           {
             path: '',
