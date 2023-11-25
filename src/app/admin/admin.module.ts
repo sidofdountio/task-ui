@@ -17,7 +17,7 @@ import { ManageTaskComponent } from './manage-task/manage-task.component';
 import { ProfileComponent } from './profile/profile.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
-import { FormsModule, ReactiveFormsModule ,FormControl} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatDatepickerModule} from '@angular/material/datepicker'; 

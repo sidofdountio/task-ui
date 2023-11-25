@@ -24,7 +24,7 @@ export class AdminDashboardComponent implements OnInit{
 
       return [
         { title: 'Insight', cols: 2, rows: 1 },
-        { title: 'Task', cols: 2, rows: 2 },
+        { title: 'Task', cols: 1, rows: 1 },
         
       ];
     })
@@ -38,7 +38,12 @@ constructor(private appService:AppService) {}
     this.currentDate = new Date();
     this.appService.getTask().subscribe(
       (response)=>{
-        this.numberTask = response.length
+        if( response.length === 0){
+          this.numberTask = 0;
+        }else{
+
+          this.numberTask = response.length
+        }
       }
     );
 

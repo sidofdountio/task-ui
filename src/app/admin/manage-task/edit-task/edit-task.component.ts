@@ -18,16 +18,17 @@ import { AppService } from 'src/app/service/app-service.service';
 export class EditTaskComponent {
 
   taskToSave: Task = {
+    id:0,
     title: '',
     status: TaskStatus.PENDING,
     description: '',
     priority: Priority.MEDIUM,
     dueDate: '',
-    user: {
+    assignee: {
       email: '',
       id: 1,
       name: '',
-      role: Role.USER
+      role: Role.ROLE_USER
     }
   }
 

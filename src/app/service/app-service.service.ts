@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Task } from '../model/task';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
 import { User } from '../model/user';
 import { AuthService } from '../auth/auth.service';
@@ -10,43 +10,38 @@ import { AuthService } from '../auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AppService{
+export class AppService {
   readonly URL = environment.URL;
- 
+
   constructor(private http: HttpClient, private auth: AuthService) { }
 
 
   addTask(task: Task): Observable<Task> {
-   
-    return this.http.post<Task>(`${this.URL}/addTask`, task,{headers:this.auth.createAuthorizationHeaders()})
+
+    return this.http.post<Task>(`${this.URL}/addTask`, task, { headers: this.auth.createAuthorizationHeaders() })
       .pipe(
         tap(response => console.log('Task added:', response))
       );
   }
 
   getTask(): Observable<Task[]> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-    return this.http.get<Task[]>(`${this.URL}`,{headers:this.auth.createAuthorizationHeaders()})
+    return this.http.get<Task[]>(`${this.URL}/tasks`, {
+      headers: this.auth.createAuthorizationHeaders()
+    })
       .pipe(
         tap(console.log)
       )
   }
 
+  
+
   tasks$ = <Observable<Task[]>>
-    this.http.get<Task>(`${this.URL}`,{headers:this.auth.createAuthorizationHeaders()}).pipe(
+    this.http.get<Task>(`${this.URL}`, {
+      headers: this.auth.createAuthorizationHeaders()
+    }).pipe(
       tap(console.log),
       catchError(this.handlerError)
     );
-
-
-  taskList$ = <Observable<Task[]>>
-    this.http.get<Task>(`${this.URL}`)
-      .pipe(
-        tap(console.log),
-        catchError(this.handlerError)
-      );
 
 
   editeProduct(taskToUpdate: Task) {
@@ -57,7 +52,7 @@ export class AppService{
   }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.URL}/user`,{headers:this.auth.createAuthorizationHeaders()}).pipe(
+    return this.http.get<User[]>(`${this.URL}/user`, { headers: this.auth.createAuthorizationHeaders() }).pipe(
       tap(console.log)
     )
   }

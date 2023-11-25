@@ -1,8 +1,9 @@
 import { Role } from "./enume/role";
 
 export interface User {
-    id:any;
+    id:number;
     name: string;
     email: string;
-    role?:Role;
+    role:Role;
+    taskCount?:number;
 }

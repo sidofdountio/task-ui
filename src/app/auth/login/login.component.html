@@ -18,10 +18,11 @@
                         <mat-error>Please provide a valid password</mat-error>
                     </mat-form-field>
                     <div class="mb3">
-                        <button type="button" mat-raised-button color="accent" [disabled]="!form.valid"
+                        <button type="button" mat-raised-button color="accent" [disabled]="!form.valid"  *ngIf="!(loading$ | async)"
                             (click)="onLogIn()">Log
                             in</button>
-                        <button type="button" mat-raised-button color="primary" [disabled]="!form.valid"></button>
+                        <button type="button" mat-raised-button color="primary"  *ngIf="loading$ | async"
+                        >Loading</button>
                     </div>
                 </form>
                 <span class="text-center">Or</span>

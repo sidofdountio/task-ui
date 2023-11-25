@@ -18,6 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker'; 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth-interceptor';
+import { TaskResolver } from './service/task-resolve';
+import { UserResolver } from './service/user-resolve';
 
 
 
@@ -44,7 +46,7 @@ import { AuthInterceptor } from './auth-interceptor';
     AppRoutingModule,
     
   ],
-  providers: [],
+  providers: [TaskResolver,UserResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

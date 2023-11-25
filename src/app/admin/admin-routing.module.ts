@@ -6,6 +6,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { authGuard } from '../auth/auth.guard';
 import { AddTaskComponent } from './manage-task/add-task/add-task.component';
+import { ManageTaskComponent } from './manage-task/manage-task.component';
+import { TaskResolver } from '../service/task-resolve';
+import { UserResolver } from '../service/user-resolve';
 
 const routes: Routes = [
   {
@@ -23,6 +26,10 @@ const routes: Routes = [
           {
             path: 'addTask',
             component: AddTaskComponent
+          },
+          {
+            path: 'task',
+            component: ManageTaskComponent
           },
           {
             path: '',

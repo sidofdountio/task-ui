@@ -1,43 +1,37 @@
 <div class="grid-container">
-
-    <ng-container *ngIf="state === DataState.LOADING_STATE">
-        <app-spinner></app-spinner>
-    </ng-container>
-
-    <ng-container *ngIf="state === DataState.ERROR_STATE">
-        <app-error></app-error>
-    </ng-container>
-
-    <ng-container *ngIf="appSate$ |async ">
+    <div class="row">
 
         <div class="row">
-            <div class="col-sm-3">
-                <button mat-icon-button type="button" class="add mb-3" routerLink="./addTask" routerLinkActive="active">
+            <div class="col-sm-4">
+                <button mat-icon-button type="button" class="add mb-3" routerLink="../addTask"
+                    routerLinkActive="active">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
+            <div class="col-sm-8">
+                <mat-form-field>
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+                </mat-form-field>
+            </div>
         </div>
+
         <div class="row">
 
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSource">
+                    <table mat-table [dataSource]="dataSource" matSort>
 
+                        <!-- ID Column -->
                         <ng-container matColumnDef="id">
-                            <th mat-header-cell *matHeaderCellDef> # </th>
-                            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+                            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
                         </ng-container>
 
-                        <!-- title Column -->
+                        <!-- Progress Column -->
                         <ng-container matColumnDef="title">
-                            <th mat-header-cell *matHeaderCellDef> Title </th>
-                            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-                        </ng-container>
-
-                        <!-- description Column -->
-                        <ng-container matColumnDef="description">
-                            <th mat-header-cell *matHeaderCellDef> Description </th>
-                            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+                            <td mat-cell *matCellDef="let row"> {{row.title}} </td>
                         </ng-container>
 
                         <!-- status Column -->
@@ -49,55 +43,27 @@
                             </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="priority">
-                            <th mat-header-cell *matHeaderCellDef> Priority </th>
-                            <td mat-cell *matCellDef="let element">
-                                <span
-                                    [ngClass]="priority.LOW   === element.priority ? 'badge-success': 'badge-danger' ">{{element.priority}}</span>
-                            </td>
-                        </ng-container>
-
-                        <!-- Name Column -->
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Assigneed To </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.user?.name }} </td>
+                            <td mat-cell *matCellDef="let element"> {{ element.assignee.name }} </td>
                         </ng-container>
 
 
 
-                        <!-- Date Column -->
-                        <ng-container matColumnDef="dueDate">
-                            <th mat-header-cell *matHeaderCellDef> Due Date </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.dueDate | date:'short' }} </td>
-                        </ng-container>
-                        <!-- Date Column -->
-                        <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef> Action </th>
-                            <td mat-cell *matCellDef="let element">
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; "></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
 
-                                <button type="button" mat-icon-button
-                                    [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
-                                <mat-menu #menu="matMenu" xPosition="before">
-                                    <button mat-menu-item>Detail</button>
-                                    <button mat-menu-item (click)="onEditTask(element.id)">Edit</button>
-                                    <button mat-menu-item>Remove</button>
-                                </mat-menu>
-
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
                     </table>
 
-
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                        aria-label="Select page of periodic elements">
-                    </mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                        aria-label="Select page of users"></mat-paginator>
                 </div>
-
             </div>
-        </div>
 
-    </ng-container>
+        </div>
+    </div>
 </div>

@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LoginComponent {
   message: string = "";
   isLoading = new BehaviorSubject<boolean>(false);
-  isLoading$ = this.isLoading.asObservable();
+  loading$ = this.isLoading.asObservable();
   
   form = this.fb.group({
     email: this.fb.nonNullable.control("", {
@@ -28,13 +28,15 @@ export class LoginComponent {
 
 
   onLogIn(): void {
+    this.isLoading.next(true);
     this.authService.login$(this.form.value as AuthenticationRequest)
       .subscribe(
         (response => {
-          
+          this.isLoading.next(false);
           this.router.navigate(['/admin'])
         }),
         (() => {
+          this.isLoading.next(false);
           this.authService.openSnackBarCustorm("Email or password not found".toUpperCase(), "X")
         })
       )

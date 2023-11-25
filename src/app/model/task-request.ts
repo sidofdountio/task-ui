@@ -9,5 +9,5 @@ export interface TaskRequest {
     description:string;
     priority:Priority;
     dueDate: Date | string;
-    user:User ;
+    assignee:User ;
 }

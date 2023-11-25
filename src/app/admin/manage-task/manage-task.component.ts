@@ -1,23 +1,18 @@
 import { Component, AfterViewInit, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { Task } from 'src/app/model/task';
 import { AppService } from 'src/app/service/app-service.service';
 import { SnackBarService } from 'src/app/service/snack-bar-service.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TaskStatus } from 'src/app/model/enume/task-status';
-import { Priority } from 'src/app/model/enume/priority';
-import { AddTaskComponent } from './add-task/add-task.component';
-import { HttpErrorResponse } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { DataState } from 'src/app/model/enume/data-state';
-import { EditTaskComponent } from './edit-task/edit-task.component';
 import { DialogService } from 'src/app/service/dialog-service.service';
-import { AppState } from 'src/app/model/app-state';
-import { CustormResponse } from 'src/app/model/custorm-response';
+import { TaskService } from 'src/app/service/task.service';
 import { User } from 'src/app/model/user';
-import { TaskRequest } from 'src/app/model/task-request';
+import { ActivatedRoute } from '@angular/router';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { Task } from 'src/app/model/task';
+import { BehaviorSubject, catchError, finalize, of } from 'rxjs';
 
 
 @Component({
@@ -25,110 +20,62 @@ import { TaskRequest } from 'src/app/model/task-request';
   templateUrl: './manage-task.component.html',
   styleUrls: ['./manage-task.component.css']
 })
-export class ManageTaskComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ManageTaskComponent implements AfterViewInit, OnInit, OnDestroy {
+  tasks: Task[] | undefined;
 
-  user!: User;
-  taskById!: Task | undefined;
-  taskList: Task[] = [];
-  dataSujet$ = new BehaviorSubject<Task[]>([]);
-  tasks: Task[] = [];
-  ELEMENT_DATA: Task[] = [];
-  task: TaskRequest = {
-    title: '',
-    status: TaskStatus.PENDING,
-    description: '',
-    priority: Priority.MEDIUM,
-    dueDate: '',
-    user: this.user
-  };
 
-  displayedColumns: string[] = ['id', 'title', 'status', 'priority', 'description', 'dueDate', 'name', 'action']
-  dataSource = new MatTableDataSource<Task>([]);
-  appSate$!: Observable<Task[]>;
-  appSates$!: Observable<AppState<CustormResponse>>;
-  state: DataState = DataState.LOADING_STATE;
-  DataState = DataState;
+
   taskStatus = TaskStatus;
-  priority = Priority;
-  title: any;
-  status: any;
-  description: any;
-  dueDate: any;
+
+  // displayedColumns: string[] = ['id', 'title', 'status', 'name'];
+  displayedColumns: string[] = ['id', 'title','status','name'];
+  dataSource!: MatTableDataSource<Task>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingSubject.asObservable();
 
   constructor(private appService: AppService, private snackbar: SnackBarService,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService, private taskService: TaskService,
+    private route: ActivatedRoute) {
+    this.dataSource = new MatTableDataSource(this.tasks);
+  }
 
 
   ngOnInit(): void {
-    this.appSate$ = this.appService.tasks$.pipe(
-      tap(
-        (response) => {
-          this.dataSource.data = response;
-          this.dataSujet$.next(response);
-          this.taskList = response;
-          this.state = DataState.LOADING_STATE
-        },
-        () => {
-          this.state = DataState.ERROR_STATE
-        },
-        () => {
-          this.state = DataState.LOADED_STATE;
-          this.snackbar.openSnackBar("Task Loaded","X");
-        }
-      )
-    );
-  }
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  onGetTasks() {
-    this.appService.getTask().subscribe(
-      () => {
-        this.snackbar.openSnackBar("Task Loaded", "Close");
-      },
-      (error: HttpErrorResponse) => {
-        this.snackbar.openSnackBar("Error Du Task Loaded", "Close");
+    this.taskService.getTasks().pipe(
+      catchError(() => of([])),
+      finalize(() => { this.loadingSubject.next(false) })
+    ).subscribe(
+      (tasks) => {
+        this.tasks = tasks;
+        this.dataSource.data = tasks;
+        console.log(tasks)
       }
     )
   }
 
-  
 
-
-  onEditTask(id: number) {
-    for (let task of this.taskList) {
-      if (task.id === id) {
-        this.taskById = task;
-      }
-    }
-    
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
 
-  onUpdate(taskToUpdate: Task) {
-    this.appService.editeProduct(taskToUpdate)
-      .subscribe(
-        () => {
-          this.snackbar.openSnackBar("Task edited successfuly", "close");
-          this.onGetTasks();
-        },
-        (error: HttpErrorResponse) => {
-          console.log("Error: %s", error.status);
-          this.snackbar.openSnackBar("And error occured", "close");
-        }
-      )
-  }
-
-  onDeleteTask(arg0: any) {
-    this.dialogService.confirmMessage("Do you want to this entry");
+  onRowClicked(_t128: any) {
   }
 
   ngOnDestroy(): void {
 
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
 }

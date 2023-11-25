@@ -20,9 +20,25 @@
 
 table {
     width: 100%;
-  }
+}
 
-  .add{
+.add {
     border: 1px solid #eee;
     box-shadow: 0px 5px 5px #333;
+}
+
+.select-row {
+    cursor: pointer;
+}
+.example-container {
+    height: 400px;
+    overflow: auto;
+  }
+
+tr.mat-mdc-footer-row {
+    font-weight: bold;
+}
+
+.mat-mdc-table-sticky {
+    border-top: 1px solid #e0e0e0;
 }
